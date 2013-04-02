@@ -7,7 +7,7 @@ class Lander(Environment):
     max_safe_landing_speed = 4.0
     min_safe_x = -0.2
     max_safe_x = 0.2
-    actionList = [(x, float(y)/10) for x in range(-10, 11) for y in range(-10, 11)]
+    actionList = [(x, float(y)/10) for x in range(0, 11) for y in range(0, 11)]
     #print(len(actionList))
 
     def __init__(self):
@@ -27,7 +27,6 @@ class Lander(Environment):
         self.thrust = None
 
     def performAction(self, action):
-        #print(action)
         self.burn, self.thrust = self.actionList[int(action[0])]
 
         self.y_velocity += self.acceleration
@@ -44,12 +43,12 @@ class Lander(Environment):
 
         self.height -= self.y_velocity
         self.x_position += self.x_velocity + self.wind
-        self._getStatus()
+        self.status = self._getStatus()
 
     def _getStatus(self):
         if self.height > 0:
             return 'in_air'
-        if (self.y_velocity > self.max_safe_landing_speed or
+        elif (abs(self.y_velocity) > self.max_safe_landing_speed or
                 self.x_position < self.min_safe_x or
                 self.x_position > self.max_safe_x):
             return 'crashed'
@@ -74,3 +73,4 @@ class Lander(Environment):
                   'Fuel': self.fuel}
         for string, variable in output.iteritems():
             print(string + ': {0}'.format(variable))
+        print('')

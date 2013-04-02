@@ -13,13 +13,17 @@ from tasks import LanderTask
 
 def main():
     environment = Lander()
-    controller = ActionValueNetwork(7, 441)
+    controller = ActionValueNetwork(7, 121)
     learner = NFQ()
     agent = LearningAgent(controller, learner)
     task = LanderTask(environment)
     experiment = EpisodicExperiment(task, agent)
 
-    experiment.doEpisodes(20)
+    while True:
+        experiment.doEpisodes(20)
+        agent.learn()
+        agent.reset()
+        print('Agent has learned.')
 
 
 if __name__ == '__main__':
