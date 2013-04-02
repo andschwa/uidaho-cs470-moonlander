@@ -7,6 +7,8 @@ class Lander(Environment):
     max_safe_landing_speed = 4.0
     min_safe_x = -0.2
     max_safe_x = 0.2
+    actionList = [(x, float(y)/10) for x in range(-10, 11) for y in range(-10, 11)]
+    #print(len(actionList))
 
     def __init__(self):
         self.reset()
@@ -25,7 +27,8 @@ class Lander(Environment):
         self.thrust = None
 
     def performAction(self, action):
-        self.burn, self.thrust = action
+        #print(action)
+        self.burn, self.thrust = self.actionList[int(action[0])]
 
         self.y_velocity += self.acceleration
 

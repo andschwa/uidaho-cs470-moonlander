@@ -13,7 +13,7 @@ from tasks import LanderTask
 
 def main():
     environment = Lander()
-    controller = ActionValueNetwork(7, 2)
+    controller = ActionValueNetwork(7, 441)
     learner = NFQ()
     agent = LearningAgent(controller, learner)
     task = LanderTask(environment)
