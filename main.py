@@ -2,18 +2,24 @@
 
 import sys
 
+from pybrain.rl.learners.valuebased import ActionValueNetwork
+from pybrain.rl.agents import LearningAgent
+from pybrain.rl.learners import NFQ
+from pybrain.rl.experiments import EpisodicExperiment
 
-from moonlander import Moonlander
+from environment import Lander
+from tasks import LanderTask
 
 
 def main():
-    the_moonlander = Moonlander()
-    while the_moonlander.test() == 'in_air':
-        the_moonlander.update()
-        the_moonlander.output()
-    print('We are no longer in the air... Final stats to follow.')
-    the_moonlander.output()
-    return
+    environment = Lander()
+    controller = ActionValueNetwork(7, 2)
+    learner = NFQ()
+    agent = LearningAgent(controller, learner)
+    task = LanderTask(environment)
+    experiment = EpisodicExperiment(task, agent)
+
+    experiment.doEpisodes(20)
 
 
 if __name__ == '__main__':
