@@ -13,7 +13,7 @@ from tasks import LanderTask
 
 def main():
     environment = Lander()
-    controller = ActionValueNetwork(7, 121)
+    controller = ActionValueNetwork(7, 441)
     learner = NFQ()
     agent = LearningAgent(controller, learner)
     task = LanderTask(environment)
@@ -22,7 +22,7 @@ def main():
     for episodes in range(10):
         experiment.doEpisodes(1)
         agent.learn(1)
-        print('Agent has learned {0} episodes.'.format(episodes + 1))
+        print('\nAgent has learned {0} episodes.\n'.format(episodes + 1))
 
 
 if __name__ == '__main__':
