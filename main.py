@@ -19,11 +19,10 @@ def main():
     task = LanderTask(environment)
     experiment = EpisodicExperiment(task, agent)
 
-    while True:
-        experiment.doEpisodes(20)
-        agent.learn()
-        agent.reset()
-        print('Agent has learned.')
+    for episodes in range(10):
+        experiment.doEpisodes(1)
+        agent.learn(1)
+        print('Agent has learned {0} episodes.'.format(episodes + 1))
 
 
 if __name__ == '__main__':
