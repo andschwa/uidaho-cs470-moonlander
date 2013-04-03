@@ -7,14 +7,13 @@ class Lander(Environment):
     max_safe_landing_speed = 4.0
     min_safe_x = -0.2
     max_safe_x = 0.2
-    actionList = [(x, float(y)/10) for x in range(0, 11) for y in range(0, 11)]
-    #print(len(actionList))
+    actionList = [(x, float(y)/100) for x in range(0, 21) for y in range(0, 21)]
 
     def __init__(self):
         self.reset()
 
     def reset(self):
-        self.acceleration = random.randint(10, 30)/10  # 1-3 by 0.1
+        self.acceleration = float(random.randint(10, 31))/10  # 1-3 by 0.1
         self.wind = 0.2 * random.random()
 
         self.status = 'in_air'
@@ -42,8 +41,11 @@ class Lander(Environment):
         self.x_velocity -= self.thrust
 
         self.height -= self.y_velocity
-        self.x_position += self.x_velocity + self.wind
+        self.x_position += (self.x_velocity + self.wind)
         self.status = self._getStatus()
+        if self.status == 'in_air':
+            self.printResults()
+            print('')
 
     def _getStatus(self):
         if self.height > 0:
@@ -56,21 +58,20 @@ class Lander(Environment):
             return 'landed'
 
     def getSensors(self):
-        return (self.height,
+        return [self.height,
                 self.x_position,
                 self.y_velocity,
                 self.x_velocity,
                 self.wind,
                 self.acceleration,
-                self.fuel)
+                self.fuel]
 
     def printResults(self):
         output = {'Status': self.status,
                   'Height': self.height,
                   'Y-Velocity': self.y_velocity,
                   'Position': self.x_position,
-                  'X-Velocity': self.x_position,
+                  'X-Velocity': self.x_velocity,
                   'Fuel': self.fuel}
         for string, variable in output.iteritems():
             print(string + ': {0}'.format(variable))
-        print('')
