@@ -4,53 +4,54 @@ from pybrain.rl.environments.environment import Environment
 
 
 class Lander(Environment):
+    indim = 7
+    outdim = 2
+
     max_safe_landing_speed = 4.0
     min_safe_x = -0.2
     max_safe_x = 0.2
-    actionList = [(x, float(y)/100) for x in range(0, 21) for y in range(0, 21)]
 
     def __init__(self):
         self.reset()
 
     def reset(self):
-        self.acceleration = float(random.randint(10, 31))/10  # 1-3 by 0.1
-        self.wind = 0.2 * random.random()
-
+        self.acceleration = float(random.randint(10, 30))/10  # 1-3 by 0.1
+        self.wind = 0.2 * (random.random()-0.5)
         self.status = 'in_air'
         self.height = 100.0
-        self.x_position = 0
+        self.x_position = 0.0
         self.y_velocity = 10.0 * random.random()
-        self.x_velocity = 0
+        self.x_velocity = 0.0
         self.fuel = 100.0
         self.burn = None
         self.thrust = None
 
     def performAction(self, action):
-        self.burn, self.thrust = self.actionList[int(action[0])]
+        burn, thrust = action
 
         self.y_velocity += self.acceleration
+        if self.fuel < burn:
+            burn = self.fuel
+        self.fuel -= abs(burn)
+        self.y_velocity -= burn
 
-        if self.fuel < self.burn:
-            self.burn = self.fuel
-        self.fuel -= abs(self.burn)
-        self.y_velocity -= self.burn
-
-        if self.fuel < self.thrust:
-            self.thrust = self.fuel
-        self.fuel -= abs(self.thrust)
-        self.x_velocity -= self.thrust
+        if self.fuel < abs(thrust):
+            if thrust > 0:
+                thrust = self.fuel
+            elif thrust <= 0:
+                thrust = -self.fuel
+        self.fuel -= abs(thrust)
+        self.x_velocity -= thrust
 
         self.height -= self.y_velocity
         self.x_position += (self.x_velocity + self.wind)
         self.status = self._getStatus()
-        if self.status == 'in_air':
-            self.printResults()
-            print('')
+        self.output(burn, thrust)
 
     def _getStatus(self):
         if self.height > 0:
             return 'in_air'
-        elif (abs(self.y_velocity) > self.max_safe_landing_speed or
+        elif (self.y_velocity > self.max_safe_landing_speed or
                 self.x_position < self.min_safe_x or
                 self.x_position > self.max_safe_x):
             return 'crashed'
@@ -59,19 +60,23 @@ class Lander(Environment):
 
     def getSensors(self):
         return [self.height,
-                self.x_position,
                 self.y_velocity,
+                self.acceleration,
+                self.x_position,
                 self.x_velocity,
                 self.wind,
-                self.acceleration,
                 self.fuel]
 
-    def printResults(self):
+    def output(self, burn, thrust):
         output = {'Status': self.status,
                   'Height': self.height,
                   'Y-Velocity': self.y_velocity,
-                  'Position': self.x_position,
+                  'Burn': burn,
+                  'Wind': self.wind,
                   'X-Velocity': self.x_velocity,
+                  'X-Position': self.x_position,
+                  'Thrust': thrust,
                   'Fuel': self.fuel}
-        for string, variable in output.iteritems():
-            print(string + ': {0}'.format(variable))
+        for string, variable in output.items():
+            print(string+': {}'.format(variable))
+        print('')

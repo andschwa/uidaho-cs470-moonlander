@@ -50,6 +50,6 @@ Hand-In:
 * A description of the ANN: # of nodes, node types, scaling, etc.
 * A dscription of the training algorithm - if any
 * A results section. Including,
-* A presentation of the 'average' results. E.g. what was the success rate of the control ANN.
-* A discussion of how the program behaved. Did it have any strengths or weaknesses?
-* A conclusion section.
+    * A presentation of the 'average' results. E.g. what was the success rate of the control ANN.
+    * A discussion of how the program behaved. Did it have any strengths or weaknesses?
+    * A conclusion section.
