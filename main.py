@@ -2,30 +2,20 @@
 
 import sys
 
-from pybrain.rl.learners.valuebased import ActionValueNetwork
-from pybrain.rl.agents import LearningAgent
-from pybrain.rl.learners import NFQ
+from pybrain.tools.shortcuts import buildNetwork
+from pybrain.optimization import HillClimber
+from pybrain.rl.agents import OptimizationAgent
 from pybrain.rl.experiments import EpisodicExperiment
 
-from environment import Lander
 from tasks import LanderTask
 
 
 def main():
-    environment = Lander()
-    controller = ActionValueNetwork(7, 441)
-    learner = NFQ()
-    agent = LearningAgent(controller, learner)
-    task = LanderTask(environment)
+    task = LanderTask()
+    net = buildNetwork(task.indim, 5, task.outdim)
+    agent = OptimizationAgent(net, HillClimber())
     experiment = EpisodicExperiment(task, agent)
-
-    #for episodes in range(20):
-    episodes = 0
-    while True:
-        experiment.doEpisodes(1)
-        agent.learn(1)
-        episodes += 1
-        print('\nAgent has learned {0} episodes.\n'.format(episodes))
+    experiment.doEpisodes(100)
 
 
 if __name__ == '__main__':
