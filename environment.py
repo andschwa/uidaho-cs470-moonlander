@@ -1,6 +1,7 @@
 import random
 
 from pybrain.rl.environments.environment import Environment
+from scipy import asarray
 
 
 class Lander(Environment):
@@ -8,7 +9,6 @@ class Lander(Environment):
     outdim = 2
 
     max_safe_landing_speed = 4.0
-    min_safe_x = -0.2
     max_safe_x = 0.2
 
     def __init__(self):
@@ -23,8 +23,13 @@ class Lander(Environment):
         self.y_velocity = 10.0 * random.random()
         self.x_velocity = 0.0
         self.fuel = 100.0
-        self.burn = None
-        self.thrust = None
+        self.sensors = [self.height,
+                        self.y_velocity,
+                        self.acceleration,
+                        self.x_position,
+                        self.x_velocity,
+                        self.wind,
+                        self.fuel]
 
     def performAction(self, action):
         burn, thrust = action
@@ -52,20 +57,13 @@ class Lander(Environment):
         if self.height > 0:
             return 'in_air'
         elif (self.y_velocity > self.max_safe_landing_speed or
-                self.x_position < self.min_safe_x or
-                self.x_position > self.max_safe_x):
+                abs(self.x_position) > self.max_safe_x_position):
             return 'crashed'
         else:
             return 'landed'
 
     def getSensors(self):
-        return [self.height,
-                self.y_velocity,
-                self.acceleration,
-                self.x_position,
-                self.x_velocity,
-                self.wind,
-                self.fuel]
+        return asarray(self.sensors)
 
     def output(self, burn, thrust):
         output = {'Status': self.status,
