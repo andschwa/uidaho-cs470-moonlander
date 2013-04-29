@@ -7,8 +7,7 @@ class Moonlander:
         self.wind = 0.2 * random.random()
 
         self.max_safe_landing_speed = 4.0
-        self.min_safe_x = -0.2
-        self.max_safe_x = 0.2
+        self.max_safe_x_position = 0.2
 
         self.landed = 'in_air'
         self.height = 100.0
@@ -30,8 +29,7 @@ class Moonlander:
         if self.height > 0:
             return 'in_air'
         if (self.y_velocity > self.max_safe_landing_speed or
-                self.x_position < self.min_safe_x or
-                self.x_position > self.max_safe_x):
+                abs(self.x_position) > self.max_safe_x_position):
             return 'crashed'
         else:
             return 'landed'
