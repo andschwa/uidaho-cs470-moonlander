@@ -44,7 +44,7 @@ class Lander(Environment):
             if thrust > 0:
                 thrust = self.fuel
             elif thrust < 0:
-                thrust -= self.fuel
+                thrust = -self.fuel
         self.fuel -= abs(thrust)
         self.x_velocity -= thrust
 
