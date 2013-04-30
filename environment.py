@@ -35,7 +35,7 @@ class Lander(Environment):
         burn, thrust = action
 
         self.y_velocity += self.acceleration
-        if self.fuel < burn:
+        if self.fuel < abs(burn):
             burn = self.fuel
         self.fuel -= abs(burn)
         self.y_velocity -= burn
@@ -43,13 +43,13 @@ class Lander(Environment):
         if self.fuel < abs(thrust):
             if thrust > 0:
                 thrust = self.fuel
-            elif thrust <= 0:
-                thrust = -self.fuel
+            elif thrust < 0:
+                thrust -= self.fuel
         self.fuel -= abs(thrust)
         self.x_velocity -= thrust
 
         self.height -= self.y_velocity
-        self.x_position += (self.x_velocity + self.wind)
+        self.x_position += self.x_velocity + self.wind
         self.status = self._getStatus()
         self.output(burn, thrust)
 
