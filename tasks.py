@@ -1,3 +1,4 @@
+from math import ceil
 from pybrain.rl.environments import EpisodicTask
 from environment import Lander
 
@@ -26,9 +27,12 @@ class LanderTask(EpisodicTask):
         reward = 0
         if self.env.status == 'crashed':
             if self.env.y_velocity > self.env.max_safe_landing_speed:
-                reward -= 10
+                reward -= ceil(abs(self.env.y_velocity) /
+                               self.env.max_safe_landing_speed)
             if abs(self.env.x_position) > self.env.max_safe_x:
-                reward -= 10
+                reward -= ceil(abs(self.env.x_position) /
+                               self.env.max_safe_x)
+            print('Returning full crashed reward: {}'.format(reward))
         if self.env.status == 'landed':
-            reward += 100
+            reward += 1000
         return reward
