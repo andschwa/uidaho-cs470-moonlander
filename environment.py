@@ -57,7 +57,7 @@ class Lander(Environment):
         if self.height > 0:
             return 'in_air'
         elif (self.y_velocity > self.max_safe_landing_speed or
-                abs(self.x_position) > self.max_safe_x_position):
+                abs(self.x_position) > self.max_safe_x):
             return 'crashed'
         else:
             return 'landed'
