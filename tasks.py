@@ -22,9 +22,6 @@ class LanderTask(EpisodicTask):
     def isFinished(self):
         return self.env.status == 'landed' or self.env.status == 'crashed'
 
-    def performAction(self, action):
-        EpisodicTask.performAction(self, action)
-
     def getReward(self):
         reward = 0
         if self.env.status == 'crashed':
