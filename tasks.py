@@ -9,9 +9,10 @@ class LanderTask(EpisodicTask):
 
     def __init__(self, environment=None):
         if environment is None:
-            environment = Lander()
-        self.env = environment
-        EpisodicTask.__init__(self, environment)
+            self.env = Lander()
+        else:
+            self.env = environment
+        EpisodicTask.__init__(self, self.env)
 
         self.sensor_limits = [(0.0, 100.0), (0.0, 35.0), (1.0, 3.0),
                               (-0.2, 0.2), (-0.2, 0.2),
@@ -26,16 +27,11 @@ class LanderTask(EpisodicTask):
 
     def getReward(self):
         reward = 0
-        if self.env.status == 'in_air':
-            if abs(self.env.x_position) > self.env.max_safe_x:
-                reward -= 1
-            if self.env.y_velocity > 25:
-                reward -= 1
         if self.env.status == 'crashed':
             if self.env.y_velocity > self.env.max_safe_landing_speed:
-                reward -= 100
+                reward -= 10
             if abs(self.env.x_position) > self.env.max_safe_x:
-                reward -= 100
+                reward -= 10
         if self.env.status == 'landed':
-            reward += 1000
+            reward += 100
         return reward
