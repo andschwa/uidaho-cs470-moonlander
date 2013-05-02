@@ -12,16 +12,17 @@ class Lander(Environment):
     max_safe_x = 0.2
 
     def __init__(self):
+        self.acceleration = float(random.randint(10, 30))/10  # 1-3 by 0.1
+        self.wind = 0.2 * (random.random()-0.5)
+        self.y_velocity_offset = 10.0 * random.random()
         self.reset()
 
     def reset(self):
-        self.acceleration = float(random.randint(10, 30))/10  # 1-3 by 0.1
-        self.wind = 0.2 * (random.random()-0.5)
         self.status = 'in_air'
         self.height = 100.0
         self.x_position = 0.0
-        self.y_velocity = 10.0 * random.random()
         self.x_velocity = 0.0
+        self.y_velocity = self.y_velocity_offset
         self.fuel = 100.0
         self.sensors = [self.height,
                         self.y_velocity,
