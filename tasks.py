@@ -15,10 +15,10 @@ class LanderTask(EpisodicTask):
             self.env = environment
         EpisodicTask.__init__(self, self.env)
 
-        self.sensor_limits = [(0.0, 100.0), (0.0, 35.0), (1.0, 3.0),
-                              (-0.2, 0.2), (-0.2, 0.2),
+        self.sensor_limits = [(0.0, 100.0), (0.0, 25.0), (1.0, 3.0),
+                              (-1.0, 1.0), (-1.0, 1.0),
                               (-0.1, 0.1), (0.0, 100.0)]
-        self.actor_limits = [(0.0, 12.0), (-0.1, 0.1)]
+        self.actor_limits = [(0.0, 10.0), (-1.0, 1.0)]
 
     def isFinished(self):
         return self.env.status == 'landed' or self.env.status == 'crashed'
@@ -27,12 +27,14 @@ class LanderTask(EpisodicTask):
         reward = 0
         if self.env.status == 'crashed':
             if self.env.y_velocity > self.env.max_safe_landing_speed:
-                reward -= ceil(abs(self.env.y_velocity) /
+                error = ceil(abs(self.env.y_velocity) /
                                self.env.max_safe_landing_speed)
+                reward -= error*error
             if abs(self.env.x_position) > self.env.max_safe_x:
-                reward -= ceil(abs(self.env.x_position) /
+                error = ceil(abs(self.env.x_position) /
                                self.env.max_safe_x)
+                reward -= error*error
             print('Returning full crashed reward: {}'.format(reward))
         if self.env.status == 'landed':
-            reward += 1000
+            reward += 5000
         return reward
