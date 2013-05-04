@@ -25,6 +25,12 @@ class Lander(Environment):
         self.y_velocity = self.y_velocity_offset
         self.fuel = 100.0
 
+    def fullreset(self):
+        self.reset()
+        self.acceleration = float(random.randint(10, 30))/10  # 1-3 by 0.1
+        self.wind = 0.2 * (random.random()-0.5)
+        self.y_velocity_offset = 10.0 * random.random()
+
     def performAction(self, action):
         burn, thrust = action
 
