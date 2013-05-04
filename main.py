@@ -30,7 +30,7 @@ def main():
     learner = StochasticHillClimber()
     agent = OptimizationAgent(net, learner)
     experiment = EpisodicExperiment(task, agent)
-    experiment.doEpisodes(1000)
+    experiment.doEpisodes(10000)
 
 
 if __name__ == '__main__':
