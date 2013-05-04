@@ -24,13 +24,6 @@ class Lander(Environment):
         self.x_velocity = 0.0
         self.y_velocity = self.y_velocity_offset
         self.fuel = 100.0
-        self.sensors = [self.height,
-                        self.y_velocity,
-                        self.acceleration,
-                        self.x_position,
-                        self.x_velocity,
-                        self.wind,
-                        self.fuel]
 
     def performAction(self, action):
         burn, thrust = action
@@ -64,18 +57,23 @@ class Lander(Environment):
             return 'landed'
 
     def getSensors(self):
-        return asarray(self.sensors)
+        sensors = [self.height,
+                   self.y_velocity,
+                   self.acceleration,
+                   self.x_position,
+                   self.x_velocity,
+                   self.wind,
+                   self.fuel]
+        return asarray(sensors)
 
     def output(self, burn, thrust):
         output = {'Status': self.status,
                   'Height': self.height,
                   'Y-Velocity': self.y_velocity,
-                  'Burn': burn,
                   'Wind': self.wind,
                   'X-Velocity': self.x_velocity,
                   'X-Position': self.x_position,
-                  'Thrust': thrust,
                   'Fuel': self.fuel}
         for string, variable in output.items():
             print(string+': {}'.format(variable))
-        print('')
+        print("\nBurning {} and thrusting {}\n".format(burn, thrust))
