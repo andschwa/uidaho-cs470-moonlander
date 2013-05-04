@@ -3,7 +3,7 @@
 import sys
 
 from pybrain.tools.shortcuts import buildNetwork
-from pybrain.optimization import HillClimber
+from pybrain.optimization import StochasticHillClimber
 from pybrain.rl.agents import OptimizationAgent
 from pybrain.rl.experiments import EpisodicExperiment
 
@@ -27,7 +27,7 @@ def main():
     """
     task = LanderTask()
     net = buildNetwork(task.indim, 5, task.outdim)
-    learner = HillClimber()
+    learner = StochasticHillClimber()
     agent = OptimizationAgent(net, learner)
     experiment = EpisodicExperiment(task, agent)
     experiment.doEpisodes(1000)
