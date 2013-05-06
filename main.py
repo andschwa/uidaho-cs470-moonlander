@@ -25,7 +25,7 @@ def main():
     learner.setEvaluator(task, module)
     optimizer.learn()
     """
-    task = LanderTask()
+    task = LanderTask(batchSize=1)
     net = buildNetwork(task.indim, 5, task.outdim)
     learner = StochasticHillClimber()
     agent = OptimizationAgent(net, learner)
