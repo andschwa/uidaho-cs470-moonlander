@@ -8,6 +8,7 @@ from pybrain.rl.agents import OptimizationAgent
 from pybrain.rl.experiments import EpisodicExperiment
 
 from tasks import LanderTask
+from environment import Lander
 
 
 def main():
@@ -30,7 +31,24 @@ def main():
     learner = StochasticHillClimber()
     agent = OptimizationAgent(net, learner)
     experiment = EpisodicExperiment(task, agent)
-    experiment.doEpisodes(10000)
+    experiment.doEpisodes(100000)
+
+    tasks = [LanderTask(environment=Lander(acceleration=float(i)))
+             for i in range(1, 4)]
+    test_size = 1000
+    for task in tasks:
+        print("Running task with acceleration {}".format(task.env.acceleration))
+        success = 0
+        for _ in range(test_size):
+            task.env.reset()
+            while not task.isFinished():
+                observation = task.getObservation()
+                action = net.activate(observation)
+                task.performAction(action)
+            print("Finished a simulation with result {}".format(task.env.status))
+            if task.env.status == 'landed':
+                success += 1
+        print("Succeeded {} times out of {}".format(success, test_size))
 
 
 if __name__ == '__main__':
