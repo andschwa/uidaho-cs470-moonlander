@@ -11,11 +11,16 @@ class Lander(Environment):
     max_safe_landing_speed = 4.0
     max_safe_x = 0.2
 
-    def __init__(self):
+    def __init__(self, acceleration=None):
+        self.fixed_acceleration = False
+        if acceleration is not None:
+            self.fixed_acceleration = True
+            self.acceleration = acceleration
         self.reset()
 
     def reset(self):
-        self.acceleration = float(random.randint(10, 30))/10  # 1-3 by 0.1
+        if not self.fixed_acceleration:
+            self.acceleration = float(random.randint(10, 30))/10  # 1-3 by 0.1
         self.wind = 0.2 * (random.random()-0.5)
         self.y_velocity = 10.0 * random.random()
         self.status = 'in_air'
